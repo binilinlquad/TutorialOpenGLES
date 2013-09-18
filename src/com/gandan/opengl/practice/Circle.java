@@ -56,8 +56,8 @@ public class Circle {
 		circleCoords[1] = 0.0f;
 		circleCoords[2] = 0.0f;
  		for(int t=3; t<rad*3; t+=3) { // 0-360 degree
-			circleCoords[t] = (float) Math.sin(t/3) * radius;
-			circleCoords[t+1]= (float)Math.cos(t/3) * radius;
+			circleCoords[t] = (float) Math.cos(t/3) * radius;
+			circleCoords[t+1]= (float)Math.sin(t/3) * radius;
 			circleCoords[t+2] = 0.0f;
 		}
 		ByteBuffer bb = ByteBuffer.allocateDirect(
