@@ -21,11 +21,11 @@ public class Circle {
 			"    gl_FragColor = vColor;" +
 			"}";
 
-	private int rad = 360;
+	private int rad;
 	private float radius = 0.5f;
 
-	private float[] circleCoords = new float[rad*3+3];	// add one center point
-	private short[] drawOrder = new short[rad*3];
+	private float[] circleCoords;	// add one center point
+	private short[] drawOrder;
 	
 	private FloatBuffer vertexBuffer;
 	private ShortBuffer drawListBuffer;
@@ -41,7 +41,12 @@ public class Circle {
 	// Set color with red, green, blue and alpha (opacity) values
 	float color[] = { 0.63671875f, 0.36953125f, 0.32265625f, 1.0f };
 	
-	public Circle() {
+	public Circle(int rad) {
+		this.rad = rad; // angle		
+		this.circleCoords = new float[rad*3+3];	// we need three element for x,y,and z. Extra three elements are needed for 0,0,0 point		
+		this.drawOrder = new short[rad*3+1];	// save draworder for GL_TRIANGLES
+		
+		// setup vertex shader and fragment shader
 		int vertexShader = MyRenderer.loadShader(GLES20.GL_VERTEX_SHADER, vertexShaderCode);
 		int fragmentShader = MyRenderer.loadShader(GLES20.GL_FRAGMENT_SHADER, fragmentShaderCode);
 		
@@ -56,8 +61,8 @@ public class Circle {
 		circleCoords[1] = 0.0f;
 		circleCoords[2] = 0.0f;
  		for(int t=3; t<rad*3; t+=3) { // 0-360 degree
-			circleCoords[t] = (float) Math.cos(t/3) * radius;
-			circleCoords[t+1]= (float)Math.sin(t/3) * radius;
+			circleCoords[t] = (float) Math.cos((double)(t/3)*3.1415926d/180.0d) * radius;
+			circleCoords[t+1]= (float)Math.sin((double)(t/3)*3.1415926d/180.0d) * radius;
 			circleCoords[t+2] = 0.0f;
 		}
 		ByteBuffer bb = ByteBuffer.allocateDirect(
@@ -70,7 +75,7 @@ public class Circle {
  		for( int t=0, j=1; t<rad*3; t+=3, j++){
  			drawOrder[t] = 0;
  			drawOrder[t+1] = (short)j;
- 			drawOrder[t+2] = (short)(j+1);
+ 			drawOrder[t+2] = (short)((j+1) == 360?1:(j+1));
  		}
 		// initialize byte buffer for the draw list
 		ByteBuffer dlb = ByteBuffer.allocateDirect(
@@ -103,7 +108,7 @@ public class Circle {
 		
 		GLES20.glUniform4fv(mColorHandle, 1, color, 0);
 		
-		// Draw the square
+		// Draw the circle
 		GLES20.glDrawElements(GLES20.GL_TRIANGLES, drawOrder.length, 
 				GLES20.GL_UNSIGNED_SHORT, drawListBuffer);
 		
