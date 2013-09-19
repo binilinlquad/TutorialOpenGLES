@@ -17,6 +17,7 @@ public class MyRenderer implements GLSurfaceView.Renderer{
 	Triangle mTriangle;
 	Square mSquare;
 	Circle mCircle;
+	//Circle2 mCircle2;
 	
 	@Override
 	public void onDrawFrame(GL10 unused){
@@ -44,6 +45,9 @@ public class MyRenderer implements GLSurfaceView.Renderer{
 		
 		// draw circle
 		mCircle.draw(mMVPMatrix);
+		
+		// draw circle 
+		//mCircle2.draw(mMVPMatrix);
 	}
 	
 	@Override
@@ -69,7 +73,10 @@ public class MyRenderer implements GLSurfaceView.Renderer{
 		mSquare = new Square();
 		
 		// initialize a circle
-		mCircle = new Circle();
+		mCircle = new Circle(60);
+		
+		// initialize a circle 2
+		//mCircle2 = new Circle2();
 	}
 	
 	
